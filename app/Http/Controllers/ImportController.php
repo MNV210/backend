@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\Question;
+use App\Models\Exercise;
+use Illuminate\Support\Facades\File;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ImportController extends Controller
 {
@@ -46,21 +49,34 @@ class ImportController extends Controller
         return response()->json(['error' => 'Vui lòng chọn file để import.'], 400);
     }
 
-    public function export(Request $request)
-    {
-        $questions = Question::where('exercise_id', $request->exercise_id)->get();
+public function export($exercise_id)
+{
+    try {
+        // Fetch questions from the database
+        $questions = Question::where('exercise_id', $exercise_id)->get();
+        $exercise = Exercise::findOrFail($exercise_id);
 
+        // Create a new Spreadsheet object
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
+        // Merge cells for the title in row 1 (from column A to column G)
+        // $sheet->mergeCells('A1:F1');
+        // // Set the title "Danh sách câu hỏi" in the merged cell
+        // $sheet->setCellValue('A1', "Danh sách câu hỏi bài kiêm tra: $exercise->title" );
+
+        // // Style the title (optional)
+        // $sheet->getStyle('A1')->getFont()->setBold(true); // Make the title bold
+        // $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER); // Center align the title
+
         // Add header row
-        $sheet->setCellValue('A1', 'Question Text');
-        $sheet->setCellValue('B1', 'Option 1');
-        $sheet->setCellValue('C1', 'Option 2');
-        $sheet->setCellValue('D1', 'Option 3');
-        $sheet->setCellValue('E1', 'Option 4');
-        $sheet->setCellValue('F1', 'Is Correct');
-        $sheet->setCellValue('G1', 'Exercise ID');
+        $sheet->setCellValue('A1', 'Câu hỏi');
+        $sheet->setCellValue('B1', 'Đáp án 1');
+        $sheet->setCellValue('C1', 'Đáp án 2');
+        $sheet->setCellValue('D1', 'Đáp án 3');
+        $sheet->setCellValue('E1', 'Đáp án 4');
+        $sheet->setCellValue('F1', 'Đáp án đúng');
+        // $sheet->setCellValue('G1', 'Exercise ID');
 
         // Add data rows
         $rowNumber = 2;
@@ -71,25 +87,32 @@ class ImportController extends Controller
             $sheet->setCellValue('D' . $rowNumber, $question->option_3);
             $sheet->setCellValue('E' . $rowNumber, $question->option_4);
             $sheet->setCellValue('F' . $rowNumber, $question->is_correct);
-            $sheet->setCellValue('G' . $rowNumber, $question->exercise_id);
+            // $sheet->setCellValue('G' . $rowNumber, $question->exercise_id);
             $rowNumber++;
         }
 
-        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $fileName = 'questions_export.xlsx';
-        $filePath = storage_path('app/exports/' . $fileName);
+        // Create a writer object
+        $writer = new Xlsx($spreadsheet);
 
-        $writer->save($filePath);
-        return response()->download($filePath, $fileName, [
-            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-        ]);
-        
+        // Create a StreamedResponse to stream the file to the client
+        $response = new StreamedResponse(
+            function() use ($writer) {
+                $writer->save('php://output');
+            },
+            200,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition' => 'attachment; filename="exercise_' . $exercise_id . '_questions.xlsx"',
+            ]
+        );
 
-        // if (file_exists($filePath) && is_readable($filePath)) {
-        //     return response()->download($filePath, $fileName)->deleteFileAfterSend(true);
-        // } else {
-        //     return response()->json(['error' => 'File không tồn tại hoặc không thể đọc được!'], 404);
-        // }
+        return $response;
+
+    } catch (\Exception $e) {
+        // Handle any exceptions that occur
+        return response()->json([
+            'error' => 'An error occurred while exporting the data: ' . $e->getMessage()
+        ], 500);
     }
+}
 }

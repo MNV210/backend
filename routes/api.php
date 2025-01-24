@@ -37,7 +37,7 @@ Route::apiResource('/questions',QuestionController::class);
 Route::get('/questions/exercise/{exercise_id}', [QuestionController::class, 'getQuestionsByExerciseId']);
 Route::post('/questions/exercise_id/{exercise_id}/search', [QuestionController::class, 'getQuestionByName']);
 Route::post('/import', [ImportController::class, 'import'])->name('import');
-Route::post('/export', [ImportController::class, 'export'])->name('export');
+Route::get('/export/{exercise_id}', [ImportController::class, 'export'])->name('export');
 Route::post('/get_lesson_by_course', [LessonController::class, 'getLessonByCourseId']);
 Route::post('/register_course', [CoursController::class, 'registrationCourse']);
 Route::post('/check_user_register', [UserRegisterCourseController::class, 'checkUserRegisterCourse']);
