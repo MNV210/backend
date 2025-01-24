@@ -1,18 +1,6 @@
-<?php ?>
-<form action="{{ route('import') }}" method="POST" enctype="multipart/form-data">
+<form action="/upload-image" method="POST" enctype="multipart/form-data">
     @csrf
-    <input type="file" name="file" required>
-    <button type="submit">Import</button>
+    <label for="image">Choose an image:</label>
+    <input type="file" name="image" id="image" required>
+    <button type="submit">Upload</button>
 </form>
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-
-@if(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-@endif
-<?php ?>

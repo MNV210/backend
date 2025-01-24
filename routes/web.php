@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ImportController;
+use App\Http\Controllers\UploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-use App\Http\Controllers\ImportController;
 
 Route::post('/import', [ImportController::class, 'import'])->name('import');
+Route::post('/upload-image', [UploadController::class, 'uploadToS3']);

@@ -57,8 +57,20 @@ class CoursController extends Controller
         ]);
 
         if ($request->hasFile('image_url')) {
-            $path = $request->file('image_url')->store('image_url', 'public');
-            $validatedData['image_url'] = $path;
+            $file = $request->file('image_url');
+
+            // Generate a unique file name
+            $fileName = time() . '_' . $file->getClientOriginalName();
+
+            // Upload the file to the S3 bucket
+            $filePath = "uploads/" . $fileName;
+            $disk = Storage::disk('s3'); // Use the 's3' disk configuration
+
+            $disk->put($filePath, file_get_contents($file), 'public'); // Use 'public' for publicly accessible files
+
+            // Get the file URL
+            $url = $disk->url($filePath);
+                $validatedData['image_url'] = $url;
         }
 
         $validatedData['slug'] = Str::slug($validatedData['course_name'], '-');

@@ -22,7 +22,8 @@ class LessonController extends Controller
 
         $response = $lessons->when(!empty($name), function ($q) use ($name) {
                 return $q->where('lesson_name', 'LIKE', "%{$name}%");
-        })->orderBy("id","DESC")->get();
+        })->with('course')
+        ->orderBy("id","DESC")->get();
 
         return response()->json([
             'status' => HttpResponse::HTTP_OK,
@@ -40,7 +41,8 @@ class LessonController extends Controller
     {
         $validatedData = $request->validate([
             'lesson_name' => 'required|string|max:255',
-            'lesson_description' => 'nullable|string',
+            'lesson_duration' => 'nullable|string',
+            'video_url' => "string",
             'course_id' => 'required|integer',
             // Add other fields as necessary
         ]);

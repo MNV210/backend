@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Admin\Courses;
+use App\Models\Course;
 
 class Lesson extends Model
 {
@@ -17,7 +17,7 @@ class Lesson extends Model
     ];
     protected $table = 'lessons';
 
-    public function cours() {
-        return $this->hasMany(Courses::class,'id', 'course_id');
+    public function course() {
+        return $this->belongsto(Course::class, 'course_id','id');
     }
 }
