@@ -45,6 +45,7 @@ Route::post('/get_course_by_user', [UserRegisterCourseController::class, 'getCou
 Route::post('list_course_user',[UserRegisterCourseController::class,'getExerciseByUserId']);
 Route::post('user_answer_question',[UserAnserQuestionController::class,'create']);
 Route::post('history_make_exercise',[UserAnserQuestionController::class,'getHistoryUserMakeExercise']);
+Route::post('/lesson/update-video-URL',[LessonController::class,'updateVideoURL']);
 
 
 Route::post('/upload',[UploadController::class,'uploadImageToS3']);
