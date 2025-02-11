@@ -27,4 +27,8 @@ class Course extends Model
     public function exercise() {
         return $this->hasOne(Exercise::class,'course_id', 'id');
     }
+    public function teacher()
+    {
+        return $this->belongsTo(User::class, 'teacher_id');
+    }
 }

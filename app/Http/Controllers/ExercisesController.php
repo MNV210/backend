@@ -16,9 +16,19 @@ class ExercisesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
+    {   
+        $user_id = $request->user_id;
         $name = $request->exercise_name;
-        $response = $this->getExerciseQuery($name)->with('courses')->orderBy("id","DESC")->get();
+
+        // Get the course IDs that the user has registered for
+        $registeredCourseIds = UserRegisterCourse::where('user_id', $user_id)->pluck('course_id');
+
+        // Get exercises that belong to the registered courses
+        $response = $this->getExerciseQuery($name)
+            ->whereIn('course_id', $registeredCourseIds)
+            ->with('courses')
+            ->orderBy("id", "DESC")
+            ->get();
 
         return response()->json([
             'status' => HttpResponse::HTTP_OK,

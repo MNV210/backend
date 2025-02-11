@@ -24,7 +24,11 @@ class CoursController extends Controller
 
         $response = $cours->when(!empty($name), function ($q) use ($name) {
                 return $q->where('course_name', 'LIKE', "%{$name}%");
-        })->with('users')->orderBy("id","DESC")->get();
+        })
+        ->whereHas('teacher') // Ensure the teacher exists
+        ->with('users')
+        ->orderBy("id","DESC")
+        ->get();
 
         if ($response->isEmpty()) {
             return response()->json([
