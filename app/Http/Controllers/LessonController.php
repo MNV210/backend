@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Lesson;
 use App\Models\Course; // Add this line
+use App\Models\UserRegisterCourse; // Add this line
 use Illuminate\Http\Response as HttpResponse;
 
 class LessonController extends Controller
@@ -78,7 +79,7 @@ class LessonController extends Controller
     public function show($id)
     {
         try {
-            $lesson = Lesson::findOrFail($id);
+            $lesson = Lesson::with('course')->findOrFail($id);
 
             return response()->json([
                 'status' => HttpResponse::HTTP_OK,
@@ -181,5 +182,17 @@ class LessonController extends Controller
             'status' => HttpResponse::HTTP_OK,
             'message' => 'Update video url successfully!'
         ], HttpResponse::HTTP_OK);
+    }
+
+    public function getLessonUserRegister(Request $request) {
+        $lesson = UserRegisterCourse::where('user_id', $request->user_id)
+                                    ->with('course')    
+                                    // ->with('user')
+                                    ->get();
+
+        return response()->json([
+                'status' => HttpResponse::HTTP_OK,
+                'data' => $lesson
+            ], HttpResponse::HTTP_OK);
     }
 }

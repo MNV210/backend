@@ -196,62 +196,37 @@ class UserController extends Controller
 
     public function changePassword(Request $request)
     {
-        $user = User::findOrFail(auth()->user()->id);
+        $user = User::findOrFail($request->user_id);
         try {
-            if($user->role == ROLE_ADMIN && !empty($request->user_id)) {
-                $user_id = $request->user_id;
-    
-                $userUpdatePassword = User::findOrFail($user_id);
-                
-                if($userUpdatePassword) {
-                    $userUpdatePassword->update([
-                        "password" => Hash::make($request->password)
-                    ]);
-                }
-
-                return response()->json([
-                    'status' => HttpResponse::HTTP_OK,
-                    'message' => 'Update password successfull',
-                ], HttpResponse::HTTP_OK);
-            }else if(
-                !empty($request->user_id) && auth()->user()->id == $request->user_id
-            ) {
-                $user_id = $request->user_id;
-    
-                $userUpdatePassword = User::findOrFail($user_id);
-                
-                if($userUpdatePassword) {
-                    if (!Hash::check($request->password_old, $userUpdatePassword->password, [])) {
-                        return response()->json([
-                            'status_code' => 403,
-                            'message' => "password not correct"
-                        ]);
-                    }
-                    $userUpdatePassword->update([
-                        "password" => Hash::make($request->password)
-                    ]);
-                }
-
-                return response()->json([
-                    'status' => HttpResponse::HTTP_OK,
-                    'message' => 'Update password successfull',
-                ], HttpResponse::HTTP_OK);
-            }else if(
-                !empty($request->user_id) && $user->role != ROLE_ADMIN || 
-                !empty($request->user_id) && auth()->user()->id != $request->user_id 
-            ) {
-                return response()->json([
-                    'status' => HttpResponse::HTTP_FORBIDDEN,
-                    'message' => "You don't permission",
-                ], HttpResponse::HTTP_FORBIDDEN);
-            }
-
             if (!Hash::check($request->password_old, $user->password, [])) {
                 return response()->json([
                     'status_code' => 403,
-                    'message' => "password not correct"
+                    'message' => "Mật khẩu cũ không chính xác"
                 ]);
             }
+            if (Hash::check($request->password, $user->password, [])) {
+                return response()->json([
+                    'status_code' => 403,
+                    'message' => "Mật khẩu cũ và mật khẩu mới đang trùng nhau"
+                ]);
+            }
+            if(!empty($request->user_id)) {
+                $user_id = $request->user_id;
+    
+                $userUpdatePassword = User::findOrFail($user_id);
+                
+                if($userUpdatePassword) {
+                    $userUpdatePassword->update([
+                        "password" => Hash::make($request->password)
+                    ]);
+                }
+
+                return response()->json([
+                    'status' => HttpResponse::HTTP_OK,
+                    'message' => 'Đổi mật khẩu thành công',
+                ], HttpResponse::HTTP_OK);
+            }
+            
             $password = Hash::make($request->password);
 
             $user->update([

@@ -12,6 +12,7 @@ use App\Http\Controllers\ImportController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserRegisterCourseController;
 use App\Http\Controllers\UserAnserQuestionController;
+use App\Http\Controllers\ProgressLearnController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,11 @@ Route::post('list_course_user',[UserRegisterCourseController::class,'getExercise
 Route::post('user_answer_question',[UserAnserQuestionController::class,'create']);
 Route::post('history_make_exercise',[UserAnserQuestionController::class,'getHistoryUserMakeExercise']);
 Route::post('/lesson/update-video-URL',[LessonController::class,'updateVideoURL']);
+Route::apiResource('/progress-learn',ProgressLearnController::class);
+Route::get('/check-lesson-completed',[ProgressLearnController::class,'checkHave']);
+
+Route::post('/course_user_register',[LessonController::class,'getLessonUserRegister']);
+Route::post('/change_password',[UserController::class,'changePassword']);
 
 
 Route::post('/upload',[UploadController::class,'uploadImageToS3']);
