@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Exercise;
 use App\Models\UserRegisterCourse;
+use App\Models\Course; // Add this import
 use Illuminate\Http\Response as HttpResponse;
 
 class ExercisesController extends Controller
@@ -23,9 +24,13 @@ class ExercisesController extends Controller
         // Get the course IDs that the user has registered for
         $registeredCourseIds = UserRegisterCourse::where('user_id', $user_id)->pluck('course_id');
 
-        // Get exercises that belong to the registered courses
+        // Get the existing course IDs
+        $existingCourseIds = Course::pluck('id');
+
+        // Get exercises that belong to the registered and existing courses
         $response = $this->getExerciseQuery($name)
-            ->whereIn('course_id', $registeredCourseIds)
+            // ->whereIn('course_id', $registeredCourseIds)
+            // ->whereIn('course_id', $existingCourseIds) // Add this line
             ->with('courses')
             ->orderBy("id", "DESC")
             ->get();

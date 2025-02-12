@@ -49,6 +49,7 @@ Route::post('history_make_exercise',[UserAnserQuestionController::class,'getHist
 Route::post('/lesson/update-video-URL',[LessonController::class,'updateVideoURL']);
 Route::apiResource('/progress-learn',ProgressLearnController::class);
 Route::get('/check-lesson-completed',[ProgressLearnController::class,'checkHave']);
+Route::post('/get_exercise_by_course_id',[UserRegisterCourseController::class,'getExercisesByCourseId']);
 
 Route::post('/course_user_register',[LessonController::class,'getLessonUserRegister']);
 Route::post('/change_password',[UserController::class,'changePassword']);

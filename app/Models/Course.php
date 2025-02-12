@@ -25,7 +25,7 @@ class Course extends Model
         return $this->hasMany(User::class,'id', 'teacher_id');
     }
     public function exercise() {
-        return $this->hasOne(Exercise::class,'course_id', 'id');
+        return $this->hasMany(Exercise::class,'course_id', 'id');
     }
     public function teacher()
     {

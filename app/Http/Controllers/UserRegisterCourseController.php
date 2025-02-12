@@ -25,6 +25,7 @@ class UserRegisterCourseController extends Controller
 
         $isRegistered = UserRegisterCourse::where('course_id', $validatedData['course_id'])
                                           ->where('user_id', $validatedData['user_id'])
+
                                           ->exists();
 
         return response()->json(
@@ -55,6 +56,15 @@ class UserRegisterCourseController extends Controller
         $user_id = $request->user_id;
         $listCourseIds = UserRegisterCourse::where('user_id', $user_id)->pluck('course_id');
         $response = Course::whereIn('id', $listCourseIds)->with('exercise')->orderBy("id", "DESC")->get();
+
+        return response()->json([
+            'status' => HttpResponse::HTTP_OK,
+            'data' => $response
+        ], HttpResponse::HTTP_OK);
+    }
+    public function getExercisesByCourseId(Request $request) {
+        $course_id = $request->course_id;
+        $response = Exercise::where('course_id', $course_id)->orderBy("id", "DESC")->get();
 
         return response()->json([
             'status' => HttpResponse::HTTP_OK,

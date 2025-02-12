@@ -50,9 +50,25 @@ class UserAnserQuestionController extends Controller
         return response()->json([
             'data' => [
                 'total_score' => $totalScore,
-                
             ],
             'message' => 'Answers created successfully'
+        ]);
+    }
+
+    public function getHistoryUserMakeExercise(Request $request) {
+        $validatedData = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'exercise_id' => 'required|integer|exists:exercises,id',
+        ]);
+
+        $response = HistoryMakeExercise::where('user_id', $validatedData['user_id'])->where('exercise_id', $validatedData['exercise_id'])
+        ->with('exercise')
+        ->with('user')
+        ->first();
+
+        return response()->json([
+            'status' => 200,
+            'data' => $response
         ]);
     }
 }
