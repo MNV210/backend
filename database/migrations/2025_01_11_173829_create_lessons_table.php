@@ -17,9 +17,11 @@ class CreateLessonsTable extends Migration
             $table->id();
             $table->integer('course_id');
             $table->text('lesson_name');
-            $table->text('video_url');
-            $table->text('lesson_duration')->nullable();
-            $table->integer('member_register')->default(0);
+            $table->text('video_url')->nullable();
+            // $table->text('lesson_duration')->nullable();
+            // $table->text('file_url')->nullable();
+            $table->tẽxt('type')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

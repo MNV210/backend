@@ -14,6 +14,7 @@ class Lesson extends Model
         'course_id',
         'video_url',
         'lesson_duration',
+        'type',
     ];
     protected $table = 'lessons';
 

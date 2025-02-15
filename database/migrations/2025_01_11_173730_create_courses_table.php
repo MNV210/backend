@@ -18,9 +18,10 @@ class CreateCoursesTable extends Migration
             $table->text('course_name');
             $table->text('course_description')->nullable();
             $table->integer('teacher_id');
-            $table->text('image_ủl')->nullable();
-            $table->varchar('type');
+            $table->text('image_url')->nullable();
+            $table->text('type')->nullable();
             $table->text('slug');
+            $table->integer('member_register')->default(0);
             $table->timestamps();
         });
     }

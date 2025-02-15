@@ -26,7 +26,7 @@ class CoursController extends Controller
                 return $q->where('course_name', 'LIKE', "%{$name}%");
         })
         ->whereHas('teacher') // Ensure the teacher exists
-        ->whereHas('users') // Ensure the user exists
+        // ->whereHas('users') // Ensure the user exists
         ->with('users')
         ->orderBy("id","DESC")
         ->get();

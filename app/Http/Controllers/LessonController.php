@@ -46,6 +46,7 @@ class LessonController extends Controller
             'video_url' => "string",
             'course_id' => 'required|integer',
             'lesson_video' => 'nullable|file|mimes:mp4,mov,ogg,qt',
+            'type' => 'nullable|string',
             // Add other fields as necessary
         ]);
 
@@ -181,6 +182,17 @@ class LessonController extends Controller
         return response()->json([
             'status' => HttpResponse::HTTP_OK,
             'message' => 'Update video url successfully!'
+        ], HttpResponse::HTTP_OK);
+    }
+
+    public function updateFileURL(Request $request) {
+        $lesson = Lesson::findOrFail($request->lesson_id);
+        $lesson->file_url = $request->file_url;
+        $lesson->save();
+
+        return response()->json([
+            'status' => HttpResponse::HTTP_OK,
+            'message' => 'Update file url successfully!'
         ], HttpResponse::HTTP_OK);
     }
 

@@ -19,7 +19,7 @@ class CreateExercisesTable extends Migration
             $table->text('title');
             $table->text('description')->nullable();
             $table->integer('total_question')->nullable();
-            $table->varchar('time')->nullable();
+            $table->text('time')->nullable();
             $table->timestamps();
         });
     }
