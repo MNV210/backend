@@ -13,6 +13,7 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserRegisterCourseController;
 use App\Http\Controllers\UserAnserQuestionController;
 use App\Http\Controllers\ProgressLearnController;
+use App\Http\Controllers\QuestionAIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +54,8 @@ Route::post('/get_exercise_by_course_id',[UserRegisterCourseController::class,'g
 
 Route::post('/course_user_register',[LessonController::class,'getLessonUserRegister']);
 Route::post('/change_password',[UserController::class,'changePassword']);
+
+Route::apiResource('/question_ai',QuestionAIController::class);
 
 
 Route::post('/upload',[UploadController::class,'uploadImageToS3']);
