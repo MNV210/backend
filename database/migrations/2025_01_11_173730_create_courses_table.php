@@ -21,6 +21,7 @@ class CreateCoursesTable extends Migration
             $table->text('image_url')->nullable();
             $table->text('type')->nullable();
             $table->text('slug');
+            $table->text('file_url')->nullable();
             $table->integer('member_register')->default(0);
             $table->timestamps();
         });
