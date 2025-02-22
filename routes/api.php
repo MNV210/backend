@@ -56,6 +56,7 @@ Route::post('/course_user_register',[LessonController::class,'getLessonUserRegis
 Route::post('/change_password',[UserController::class,'changePassword']);
 
 Route::apiResource('/question_ai',QuestionAIController::class);
+Route::post('/courses/update-file-training',[CoursController::class,'updateFileTrainingURL']);
 
 
 Route::post('/upload',[UploadController::class,'uploadImageToS3']);

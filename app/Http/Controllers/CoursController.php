@@ -238,5 +238,15 @@ class CoursController extends Controller
         }
     }
 
-    
+    public function updateFileTrainingURL(Request $request) {
+        // dd($request->all());
+        $course = Course::findOrFail($request->course_id);
+        $course->file_url = $request->file_url;
+        $course->save();
+
+        return response()->json([
+            'status' => HttpResponse::HTTP_OK,
+            'message' => 'Update file url successfully!'
+        ], HttpResponse::HTTP_OK);
+    }
 }
