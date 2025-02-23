@@ -244,4 +244,14 @@ class UserController extends Controller
             ], HttpResponse::HTTP_BAD_REQUEST);
         }
     }
+
+    public function getUserWithRoleNotUser()  {
+        $users = User::where('role', '!=', 'user')->get();
+
+        return response()->json([
+            'status' => HttpResponse::HTTP_OK,
+            'data' => $users,
+        ], HttpResponse::HTTP_OK);
+        
+    }
 }

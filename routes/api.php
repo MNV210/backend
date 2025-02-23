@@ -57,6 +57,7 @@ Route::post('/change_password',[UserController::class,'changePassword']);
 
 Route::apiResource('/question_ai',QuestionAIController::class);
 Route::post('/courses/update-file-training',[CoursController::class,'updateFileTrainingURL']);
+Route::get('/role_not_user',[UserController::class,'getUserWithRoleNotUser']);
 
 
 Route::post('/upload',[UploadController::class,'uploadImageToS3']);
