@@ -56,7 +56,7 @@ class CoursController extends Controller
             'course_name' => 'required|string|max:255',
             'course_description' => 'nullable|string',
             'teacher_id' => 'required|integer',
-            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'type' => 'string',
             'slug' => 'string',
         ]);
@@ -93,6 +93,11 @@ class CoursController extends Controller
             );
 
         } catch (\Exception $error) {
+            \Log::error('Error in create Course: ' . $error->getMessage(), [
+                'request' => $request->all(),
+                'error' => $error
+            ]);
+
             return response()->json([
                 'status_code' => HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
                 'message' => 'Error in create Course',
